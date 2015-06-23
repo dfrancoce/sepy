@@ -8,8 +8,11 @@ from sepy.util import Util
 class SepySpider(BaseSpider):
     name = "sepy"
     allowed_domains = ["se-radio.net"]
-    util = Util()
-    start_urls = util.getUrls()
+
+    def __init__(self, year=None, month=None, *args, **kwargs):
+        super(SepySpider, self).__init__(*args, **kwargs)
+        util = Util()
+        self.start_urls = util.getUrls(year, month)
 
     def encodeString(self, stringToEncode):
         return stringToEncode.encode('utf-8', 'replace')

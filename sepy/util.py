@@ -1,6 +1,8 @@
 import datetime, os, errno
 
 class Util:
+    urls = []
+    url = "http://www.se-radio.net/"
 
     def createDirectory(self, path):
         try:
@@ -11,17 +13,28 @@ class Util:
             else:
                 raise
 
-    def getUrls(self):
-        now = datetime.datetime.now()
-        start = 2006
-        end = now.year + 1
+    def getUrls(self, year, month):
+        if (not year is None):
+            if (not month is None):
+                self.appendMonthToUrl(int(year), int(month))
+            else:
+                self.iterateMonths(int(year))
+        else:
+            now = datetime.datetime.now()
+            start = 2006
+            end = now.year + 1
+            self.iterateYears(start, end)
 
-        url = "http://www.se-radio.net/"
-        urls = []
+        return self.urls
 
-        for i in range(start, end): # years
-            for j in range(1,13): # months
-                urls.append(url + str(i) + "/" + str(j))
-                self.createDirectory("data/" + str(i) + "/" + str(j))
+    def iterateYears(self, start, end):
+        for year in range(start, end):
+            self.iterateMonths(year)
 
-        return urls
+    def iterateMonths(self, year):
+        for month in range(1,13): # months
+            self.appendMonthToUrl(year, month)
+
+    def appendMonthToUrl(self, year, month):
+        self.urls.append(self.url + str(year) + "/" + str(month))
+        self.createDirectory("data/" + str(year) + "/" + str(month))
